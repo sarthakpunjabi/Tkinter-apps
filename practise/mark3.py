@@ -11,7 +11,7 @@ def my_func():
 my_label = Label(text="this is label",font=('Arial',24,'bold'))
 my_label.pack()
 
-button = Button(window,text = 'Submit',command=my_func,bg='blue')
+button = Button(window,text = 'Submit',command=my_func)
 button.pack()
 
 inp = Entry(width=10)
