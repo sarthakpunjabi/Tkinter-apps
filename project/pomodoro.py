@@ -1,8 +1,9 @@
 """
-This application is for enhancing productivity
+This application is for enhancing productivityl
 """
 import math
 from tkinter import Button,Label,Canvas,Tk
+from tkinter.constants import FALSE
 from PIL import ImageTk,Image
 
 # ---------------------------- CONSTANTS ------------------------------- #
@@ -16,6 +17,7 @@ SHORT_BREAK_MIN = 5
 LONG_BREAK_MIN = 20
 REPS = 0
 CALCTIME = None
+STOP = FALSE
 
 # ---------------------------- TIMER RESET ------------------------------- # 
 def reset_timer():
@@ -30,6 +32,17 @@ def reset_timer():
     check_mark.config(text="")
     start.config(state='active')
 
+# ---------------------------- STOP TIMER ------------------------------- # 
+def stop_button():
+    """
+    this module is for stopping the timer
+    """
+    global STOP
+    window.after_cancel(CALCTIME)
+    start.config(state="active")
+    stop.config(state="disabled")
+    STOP = True
+    
 
 # ---------------------------- TIMER MECHANISM ------------------------------- # 
 def start_timer():
@@ -37,22 +50,33 @@ def start_timer():
     This module is for deciding the state and mode
     """
     start.config(state='disabled')
+    stop.config(state='active')
     global REPS
-    REPS +=1
-    check_mark.config(text="",fg=GREEN)
-    if REPS == 8:
-        timer.config(text="Long break Enjoy ☕️",fg="red",bg='black',font=(FONT_NAME,26,'bold'))
-        check_mark.config(text="✔",fg='white')
-        count_down(LONG_BREAK_MIN*60)
-    elif REPS%2==0:
-        timer.config(text="Short-break Relax 🧘🏻 ",fg="pink",bg='black',font=(FONT_NAME,26,'bold'))
-        check_mark.config(text="✔",fg='white')
-        count_down(SHORT_BREAK_MIN *60)
-    else:
-        timer.config(text="WORK",fg=GREEN,bg='black',font=(FONT_NAME,46,'bold'))
-        count_down(WORK_MIN * 60)
-    
+    global STOP
 
+    if STOP:
+        temp = canvas.itemcget(timer_text,'text').split(":")
+        ans = (int(temp[0])*60)+int(temp[1])
+        STOP = False
+        count_down(ans)
+
+    else:
+        REPS +=1
+        check_mark.config(text="",fg=GREEN)
+        if REPS == 8:
+            timer.config(text="Long break Enjoy ☕️",fg="red",bg='black',font=(FONT_NAME,26,'bold'))
+            check_mark.config(text="✔",fg='white')
+            count_down(LONG_BREAK_MIN*60)
+            
+        elif REPS%2==0:
+            timer.config(text="Short-break Relax 🧘🏻 ",fg="pink",bg='black',font=(FONT_NAME,26,'bold'))
+            check_mark.config(text="✔",fg='white')
+            count_down(SHORT_BREAK_MIN *60)
+
+        else:
+            timer.config(text="WORK",fg=GREEN,bg='black',font=(FONT_NAME,46,'bold'))
+            count_down(WORK_MIN * 60)
+            
 # ---------------------------- COUNTDOWN MECHANISM ------------------------------- # 
 def count_down(count):
     """
@@ -81,7 +105,7 @@ timer.grid(row=0,column=1)
 
 #canvas
 canvas = Canvas(width=200,height=224,highlightthickness=0,bg='black')
-tomato_img = ImageTk.PhotoImage(Image.open('tomato.gif'))
+tomato_img = ImageTk.PhotoImage(Image.open('project/tomato.gif'))
 canvas.create_image(100,112,image=tomato_img)
 timer_text = canvas.create_text(100,130,text="00:00",fill="black",font=(FONT_NAME,35,'bold'))
 canvas.grid(row=1,column=1)
@@ -96,6 +120,10 @@ reset = Button(window,text="Reset",highlightbackground='#FF5151',
 highlightthickness=0,command=reset_timer
 )
 reset.grid(row=2,column=2)
+stop = Button(window,text="Stop",highlightbackground="#FF5151",
+command=stop_button)
+stop.grid(row=2,column=1)
+
 
 #checkmark
 check_mark = Label(fg=GREEN,bg='black')
