@@ -1,3 +1,6 @@
+"""
+This application manages your password and profile 
+"""
 import random
 from tkinter import Tk,Canvas,Label,Button,Entry,END,messagebox
 from PIL import Image,ImageTk
@@ -6,12 +9,14 @@ import pyperclip
 
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
 def generate_password():
+    """
+    This module automatically generates password
+    """
     small_letters = [chr(x) for x in range(ord('a'),ord('z')+1)]
     big_letters = [chr(x) for x in range(ord('A'),ord('Z')+1)]
     letters = small_letters + big_letters
     symbols = [chr(x) for x in range(ord('!'),ord('/')+1)]
     numbers = [chr(x) for x in range(ord('0'),ord('9')+1)]
-
     password = ""
     strong_password=""
     for i in range(0,10):
@@ -35,14 +40,22 @@ def generate_password():
 
 # ---------------------------- SAVE PASSWORD ------------------------------- #
 def save():
-
+    """
+    This module is to add data into database
+    """
     def clean():
+        """
+        This module is to clean Entry after storing data
+        """
         webinp.delete(0,END)
         passwordinp.delete(0,END)
         username.delete(0,END)
         messagebox.showinfo(title="save",message="Your data got saved")
 
     def validator():
+        """
+        It helps validating the Entry
+        """
         if len(webinp.get())==0 or len(username.get())==0 or len(passwordinp.get())==0:
             return False
         else:
@@ -50,26 +63,32 @@ def save():
         
     with open("database.txt","a+",encoding="utf-8") as fil:
         fil.seek(0)
-        rd = fil.read()
-        if webinp.get() in rd:
+        read_line = fil.read()
+        if webinp.get() in read_line:
             fil.seek(0)
-            ok = messagebox.askokcancel(title="Update",message="Do you want to update the profile")
+            flag_ok = messagebox.askokcancel(title="Update",
+            message="Do you want to update the profile"
+            )
             for i in fil.readlines():
-                if ok and webinp.get() in i and validator():
+                if flag_ok and webinp.get() in i and validator():
                     j = f"{webinp.get()} | {username.get()} | {passwordinp.get()} \n"
                     fil.truncate(0)
                     fil.seek(0)
-                    fil.write(rd.replace(i,j))
+                    fil.write(read_line.replace(i,j))
                     clean()
                 else:
-                    messagebox.showerror(title="Something went wrong",message="Please check your fields")
+                    messagebox.showerror(title="Something went wrong",
+                    message="Please check your fields"
+                    )
                     
         else:
             if validator():
                 fil.write(f"{webinp.get()} | {username.get()} | {passwordinp.get()} \n")
                 clean()
             else:
-                messagebox.showerror(title="Something went wrong",message="Please check your fields")
+                messagebox.showerror(title="Something went wrong",
+                message="Please check your fields"
+                )
 
         
 
@@ -92,8 +111,8 @@ website = Label(window,text="Website:",bg="black",fg="white")
 website.grid(row=1,column=0)
 webid = Label(window,text="Username/email",bg="black",fg="white")
 webid.grid(row=2,column=0)
-password = Label(window,text="Password",bg="black",fg="white")
-password.grid(row=3,column=0)
+passwords = Label(window,text="Password",bg="black",fg="white")
+passwords.grid(row=3,column=0)
 
 #Input
 webinp = Entry(width=35,bg="black",fg="white",highlightthickness=0)
