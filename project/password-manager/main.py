@@ -1,4 +1,5 @@
-from tkinter import Tk,Canvas,Label,Button,Entry,END
+from os import times
+from tkinter import Tk,Canvas,Label,Button,Entry,END,messagebox
 from PIL import Image,ImageTk
 
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
@@ -6,8 +7,44 @@ def generate_password():
     pass
 
 # ---------------------------- SAVE PASSWORD ------------------------------- #
-def add():
-    pass
+def save():
+
+    def clean():
+        webinp.delete(0,END)
+        passwordinp.delete(0,END)
+        username.delete(0,END)
+        messagebox.showinfo(title="save",message="Your data got saved")
+
+    def validator():
+        if len(webinp.get())==0 or len(username.get())==0 or len(passwordinp.get())==0:
+            return False
+        else:
+            return True
+        
+    with open("database.txt","a+",encoding="utf-8") as fil:
+        fil.seek(0)
+        rd = fil.read()
+        if webinp.get() in rd:
+            fil.seek(0)
+            ok = messagebox.askokcancel(title="Update",message="Do you want to update the profile")
+            for i in fil.readlines():
+                if ok and webinp.get() in i and validator():
+                    j = f"{webinp.get()} | {username.get()} | {passwordinp.get()} \n"
+                    fil.truncate(0)
+                    fil.seek(0)
+                    fil.write(rd.replace(i,j))
+                    clean()
+                else:
+                    messagebox.showerror(title="Something went wrong",message="Please check your fields")
+                    
+        else:
+            if validator():
+                fil.write(f"{webinp.get()} | {username.get()} | {passwordinp.get()} \n")
+                clean()
+            else:
+                messagebox.showerror(title="Something went wrong",message="Please check your fields")
+
+        
 
 # ---------------------------- UI SETUP ------------------------------- #
 
@@ -26,7 +63,6 @@ canvas.grid(row=0,column=1)
 #Labels
 website = Label(window,text="Website:",bg="black",fg="white")
 website.grid(row=1,column=0)
-website.focus()
 webid = Label(window,text="Username/email",bg="black",fg="white")
 webid.grid(row=2,column=0)
 password = Label(window,text="Password",bg="black",fg="white")
@@ -34,7 +70,7 @@ password.grid(row=3,column=0)
 
 #Input
 webinp = Entry(width=35,bg="black",fg="white",highlightthickness=0)
-webinp.insert(END,string="Enter website name")
+webinp.focus()
 webinp.grid(row=1,column=1,columnspan=2,pady=10)
 username = Entry(width=35,bg="black",fg="white",highlightthickness=0)
 username.insert(END,string="Enter User Id")
@@ -46,7 +82,7 @@ passwordinp.grid(row=3,column=1,pady=20)
 #button
 generate = Button(width=8,highlightbackground='red',text='Generate',command=generate_password)
 generate.grid(row=3,column=2)
-add = Button(highlightbackground='red',text="Add",command=add,width=36)
+add = Button(highlightbackground='red',text="Add",command=save,width=36)
 add.grid(row=4,column=1,columnspan=2)
 
 window.mainloop()
