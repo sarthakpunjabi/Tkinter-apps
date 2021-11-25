@@ -1,10 +1,37 @@
-from os import times
+import random
 from tkinter import Tk,Canvas,Label,Button,Entry,END,messagebox
 from PIL import Image,ImageTk
+import pyperclip
+
 
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
 def generate_password():
-    pass
+    small_letters = [chr(x) for x in range(ord('a'),ord('z')+1)]
+    big_letters = [chr(x) for x in range(ord('A'),ord('Z')+1)]
+    letters = small_letters + big_letters
+    symbols = [chr(x) for x in range(ord('!'),ord('/')+1)]
+    numbers = [chr(x) for x in range(ord('0'),ord('9')+1)]
+
+    password = ""
+    strong_password=""
+    for i in range(0,10):
+        password += random.choice(letters)+" "
+
+    for i in range(0,4):
+        password += random.choice(symbols)+" "
+
+    for i in range(0,5):
+        password += random.choice(numbers)+" "
+
+    password = password.split(" ")
+    password.pop()
+    random.shuffle(password)
+    for i in range(0,len(password)):
+        strong_password += password[i]
+
+    pyperclip.copy(strong_password)
+    passwordinp.insert(0,string=f"{strong_password}")
+    
 
 # ---------------------------- SAVE PASSWORD ------------------------------- #
 def save():
