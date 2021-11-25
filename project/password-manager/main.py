@@ -1,13 +1,9 @@
-"""
-This application manages your password and profile 
-"""
+""" This application manages your password and profile """
 import random
 from tkinter import Tk,Canvas,Label,Button,Entry,END,messagebox
 from PIL import Image,ImageTk
 import pyperclip
 
-
-# ---------------------------- PASSWORD GENERATOR ------------------------------- #
 def generate_password():
     """
     This module automatically generates password
@@ -36,9 +32,7 @@ def generate_password():
 
     pyperclip.copy(strong_password)
     passwordinp.insert(0,string=f"{strong_password}")
-    
 
-# ---------------------------- SAVE PASSWORD ------------------------------- #
 def save():
     """
     This module is to add data into database
@@ -60,7 +54,6 @@ def save():
             return False
         else:
             return True
-        
     with open("database.txt","a+",encoding="utf-8") as fil:
         fil.seek(0)
         read_line = fil.read()
@@ -80,7 +73,6 @@ def save():
                     messagebox.showerror(title="Something went wrong",
                     message="Please check your fields"
                     )
-                    
         else:
             if validator():
                 fil.write(f"{webinp.get()} | {username.get()} | {passwordinp.get()} \n")
@@ -89,10 +81,6 @@ def save():
                 messagebox.showerror(title="Something went wrong",
                 message="Please check your fields"
                 )
-
-        
-
-# ---------------------------- UI SETUP ------------------------------- #
 
 #screen
 window = Tk()
