@@ -1,0 +1,10 @@
+{
+    "amazon": {
+        "email": "Enter User Id",
+        "password": "Enter Password"
+    },
+    "facbook": {
+        "email": "Enter User Id",
+        "password": "Enter Password"
+    }
+}
