@@ -86,9 +86,14 @@ def search_func():
     """
     This is for the search functionality
     """
-    with open("database.json",mode="r",encoding="utf-8") as fil:
-        data = json.load(fil)
-        temp = webinp.get()
+    try:
+        with open("database.json",mode="r",encoding="utf-8") as fil:
+            data = json.load(fil)
+            temp = webinp.get()
+
+    except FileNotFoundError as message:
+        messagebox.showerror(title="not found",message=f"{message}")
+    else:
         if temp in data:
             messagebox.showinfo(title="showing password",
             message=f"Provider:{temp} \n"+
@@ -108,7 +113,7 @@ window.config(padx=50,pady=50,bg="black")
 
 #cavas
 canvas = Canvas(width=200,height=200,highlightthickness=0,bg='black')
-img = ImageTk.PhotoImage(Image.open("project/password-manager/logo.gif"))
+img = ImageTk.PhotoImage(Image.open("logo.gif"))
 image = canvas.create_image(100,100,image=img)
 canvas.grid(row=0,column=1)
 
