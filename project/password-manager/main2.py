@@ -1,9 +1,9 @@
 """ This application manages your password and profile """
 import random
+import json
 from tkinter import Tk,Canvas,Label,Button,Entry,END,messagebox
 from PIL import Image,ImageTk
 import pyperclip
-import json
 
 def generate_password():
     """
@@ -55,28 +55,25 @@ def save():
             return False
         else:
             return True
-    
     new_data = {
-                f"{webinp.get()}":{
-                    "email":f"{username.get()}",
-                    "password":f"{passwordinp.get()}"
+                f"{webinp.get().lower()}":{
+                    "email":f"{username.get().lower()}",
+                    "password":f"{passwordinp.get().lower()}"
                 }
             }
-    try:        
+    try:
         if validator():
             print("trying")
             with open("database.json",mode="r",encoding='utf-8') as fil:
                 data = json.load(fil)
-    
-    except:
+    except (FileNotFoundError, json.decoder.JSONDecodeError):
         print("Exception")
-        messagebox.showwarning(title="warning message",message=f"")
+        messagebox.showwarning(title="warning message",message="This is exceptional case")
         with open("database.json",mode="w",encoding="utf-8") as fill:
             if validator():
                 fill.seek(0)
                 json.dump(new_data,fill,indent=4)
                 clean()
-    
     else:
         print("in else")
         data.update(new_data)
@@ -84,6 +81,24 @@ def save():
             if validator():
                 json.dump(data,fil,indent=4)
                 clean()
+
+def search_func():
+    """
+    This is for the search functionality
+    """
+    with open("database.json",mode="r",encoding="utf-8") as fil:
+        data = json.load(fil)
+        temp = webinp.get()
+        if temp in data:
+            messagebox.showinfo(title="showing password",
+            message=f"Provider:{temp} \n"+
+            f"email:{data[temp]['email']} \n"+
+            f"password:{data[temp]['password']}"
+            )
+        else:
+            messagebox.showwarning(title="No provider like that",
+            message=f"There is no provider like {temp}"
+            )
 
 #screen
 window = Tk()
@@ -106,9 +121,9 @@ passwords = Label(window,text="Password",bg="black",fg="white")
 passwords.grid(row=3,column=0)
 
 #Input
-webinp = Entry(width=35,bg="black",fg="white",highlightthickness=0)
+webinp = Entry(width=22,bg="black",fg="white",highlightthickness=0)
 webinp.focus()
-webinp.grid(row=1,column=1,columnspan=2,pady=10)
+webinp.grid(row=1,column=1,pady=20)
 username = Entry(width=35,bg="black",fg="white",highlightthickness=0)
 username.insert(END,string="Enter User Id")
 username.grid(row=2,column=1,columnspan=2,pady=10)
@@ -121,5 +136,7 @@ generate = Button(width=8,highlightbackground='red',text='Generate',command=gene
 generate.grid(row=3,column=2)
 add = Button(highlightbackground='red',text="Add",command=save,width=36)
 add.grid(row=4,column=1,columnspan=2)
+search = Button(highlightbackground='red',text='Search',command=search_func)
+search.grid(row=1,column=2)
 
 window.mainloop()

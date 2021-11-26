@@ -1,10 +1,14 @@
 {
     "amazon": {
-        "email": "Enter User Id",
-        "password": "Enter Password"
+        "email": "enter user id",
+        "password": "enter password"
     },
     "facbook": {
         "email": "Enter User Id",
         "password": "Enter Password"
+    },
+    "google": {
+        "email": "cbj",
+        "password": "lsls"
     }
 }
